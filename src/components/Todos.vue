@@ -1,24 +1,96 @@
 <template>
   <div id="app">
       <h1>Todos</h1>
-      <div class="Todos">
-          <div v-for="todo in alltodos" :key="todo.id" class="Todo">{{todo.title}}
-              
+       <div class="legend">
+      <span>Double click to mark as complete</span>
+      <span>
+        <span class="incomplete-box"></span> = Incomplete
+      </span>
+      <span>
+        <span class="complete-box"></span> = Complete
+      </span>
+    </div>
+      <div class="todos">
+         <div @dblclick="onDblClick(todo)" v-for="todo in allTodos" 
+         v-bind:key="todo.id" 
+         class="todo" 
+         v-bind:class="{'is-complete':todo.completed}">
+          {{ todo.title }}
+          <i @click="deletetodo(todo.id)" class="fas fa-trash-alt"></i>
           </div>
       </div>
   </div>
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+
+import { mapGetters,mapActions } from 'vuex'
+
 
 export default {
     name:"Todos",
-    computed: mapGetters(['alltodos'])
-  
+     methods:
+    {
+        ...mapActions(['fetchtodos','deletetodo','updatetodos']),
+        onDblClick(todo)
+        {
+            const UpdTodo={
+                id: todo.id,
+                title:todo.title,
+                completed:!todo.completed
+            }
+            this.updatetodos(UpdTodo)
+        }
+    },
+    computed: mapGetters(['allTodos']),
+    created(){
+        this.fetchtodos();
+    }
 };
+
 </script>
 
-<style>
-
+<style scoped>
+.todos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+}
+.todo {
+  border: 1px solid #ccc;
+  background: #41b883;
+  padding: 1rem;
+  border-radius: 5px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+i {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: #fff;
+  cursor: pointer;
+}
+.legend {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+.complete-box {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #35495e;
+}
+.incomplete-box {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #41b883;
+}
+.is-complete {
+  background: #35495e;
+  color: #fff;
+}
 </style>

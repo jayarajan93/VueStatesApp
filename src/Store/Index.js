@@ -1,12 +1,14 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
-import Todos from './Modules/todos'
+import todos from './modules/todos'
 
+
+//Load Vuex
 Vue.use(Vuex)
+
+//Create store 
 export default new Vuex.Store({
-
-    modules: {
-        Todos
+    modules:{
+        todos
     }
-
-})
+});
